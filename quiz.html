@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Random Kvíz 🧠</title>
+  <style>
+    body {
+      background: #1e1e1e;
+      color: #fff;
+      font-family: Arial;
+      text-align: center;
+      padding: 30px;
+    }
+    .question {
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+    .answer {
+      background: #333;
+      border: none;
+      color: #fff;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: 0.2s;
+    }
+    .answer:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 Random Kvíz</h1>
+  <div id="quiz">
+    <div class="question" id="questionText"></div>
+    <div id="answers"></div>
+  </div>
+  <div id="result" style="margin-top:20px; font-size:20px;"></div>
+
+  <script>
+    const questions = [
+      {
+        question: "Jaká je nejvyšší hora světa?",
+        answers: ["K2", "Everest", "Mont Blanc", "Makalu"],
+        correct: 1
+      },
+      {
+        question: "Kolik má člověk prstů celkem?",
+        answers: ["10", "20", "15", "8"],
+        correct: 1
+      },
+      {
+        question: "Který jazyk je nejrozšířenější na světě?",
+        answers: ["Angličtina", "Mandarínská čínština", "Španělština", "Arabština"],
+        correct: 1
+      }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = questions[currentIndex];
+      document.getElementById("questionText").textContent = q.question;
+
+      const answersDiv = document.getElementById("answers");
+      answersDiv.innerHTML = "";
+
+      q.answers.forEach((ans, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = ans;
+        btn.classList.add("answer");
+        btn.onclick = () => checkAnswer(i);
+        answersDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(index) {
+      if (index === questions[currentIndex].correct) {
+        score++;
+      }
+      currentIndex++;
+      if (currentIndex < questions.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("quiz").style.display = "none";
+        document.getElementById("result").textContent = `Konec! Tvé skóre: ${score} / ${questions.length}`;
+      }
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
