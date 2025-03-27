@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Click the Circle!</title>
+  <style>
+    body {
+      margin: 0;
+      background: #222;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin: 20px;
+    }
+    #gameArea {
+      width: 500px;
+      height: 500px;
+      border: 3px solid #fff;
+      position: relative;
+      background: #111;
+    }
+    .circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: crimson;
+      position: absolute;
+      cursor: pointer;
+    }
+    #score {
+      font-size: 24px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Click the Circle!</h1>
+  <div id="score">Skóre: 0</div>
+  <div id="gameArea"></div>
+
+  <script>
+    const gameArea = document.getElementById("gameArea");
+    const scoreEl = document.getElementById("score");
+    let score = 0;
+
+    function createCircle() {
+      const circle = document.createElement("div");
+      circle.classList.add("circle");
+
+      const x = Math.random() * (gameArea.clientWidth - 40);
+      const y = Math.random() * (gameArea.clientHeight - 40);
+      circle.style.left = `${x}px`;
+      circle.style.top = `${y}px`;
+
+      circle.addEventListener("click", () => {
+        score++;
+        scoreEl.textContent = `Skóre: ${score}`;
+        gameArea.removeChild(circle);
+        spawnNew();
+      });
+
+      gameArea.appendChild(circle);
+
+      setTimeout(() => {
+        if (gameArea.contains(circle)) {
+          gameArea.removeChild(circle);
+          spawnNew();
+        }
+      }, 1500);
+    }
+
+    function spawnNew() {
+      setTimeout(createCircle, 500);
+    }
+
+    createCircle();
+  </script>
+</body>
+</html>
