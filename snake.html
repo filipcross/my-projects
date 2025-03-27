@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Hadí hra 🐍</title>
+  <style>
+    body {
+      background: #222;
+      color: #fff;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    #game {
+      margin: 30px auto;
+      display: grid;
+      grid-template-columns: repeat(20, 20px);
+      grid-template-rows: repeat(20, 20px);
+      gap: 1px;
+      background: #111;
+      width: max-content;
+    }
+    .cell {
+      width: 20px;
+      height: 20px;
+      background: #333;
+    }
+    .snake {
+      background: limegreen;
+    }
+    .food {
+      background: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐍 Hadí hra</h1>
+  <p>Ovládání: šipky na klávesnici</p>
+  <div id="game"></div>
+
+  <script>
+    const game = document.getElementById('game');
+    const cells = [];
+    const size = 20;
+
+    // Vytvoření mřížky
+    for (let i = 0; i < size * size; i++) {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      game.appendChild(cell);
+      cells.push(cell);
+    }
+
+    let snake = [42, 41];
+    let direction = 1;
+    let food = 60;
+
+    function draw() {
+      cells.forEach(cell => cell.className = 'cell');
+      snake.forEach(i => cells[i].classList.add('snake'));
+      cells[food].classList.add('food');
+    }
+
+    function move() {
+      const head = snake[0];
+      let newHead = head + direction;
+
+      // Kolize se zdí
+      if (
+        (direction === 1 && head % size === size - 1) ||
+        (direction === -1 && head % size === 0) ||
+        (direction === size && head + size >= size * size) ||
+        (direction === -size && head - size < 0)
+      ) {
+        return gameOver();
+      }
+
+      // Kolize se sebou
+      if (snake.includes(newHead)) return gameOver();
+
+      snake.unshift(newHead);
+
+      // Snězení jídla
+      if (newHead === food) {
+        placeFood();
+      } else {
+        snake.pop();
+      }
+
+      draw();
+    }
+
+    function placeFood() {
+      do {
+        food = Math.floor(Math.random() * size * size);
+      } while (snake.includes(food));
+    }
+
+    function gameOver() {
+      alert('Konec hry!');
+      snake = [42, 41];
+      direction = 1;
+      placeFood();
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowUp' && direction !== size) direction = -size;
+      else if (e.key === 'ArrowDown' && direction !== -size) direction = size;
+      else if (e.key === 'ArrowLeft' && direction !== 1) direction = -1;
+      else if (e.key === 'ArrowRight' && direction !== -1) direction = 1;
+    });
+
+    draw();
+    setInterval(move, 150);
+  </script>
+</body>
+</html>
